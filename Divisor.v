@@ -1,71 +1,54 @@
+// Clock divider circuit
+// From 50 MHz to 1 MHz with %50 duty cycle
+ /******************************************************************* 
+* Name:
+*	Decodificador.v
+* Description:
+* 	This module is a register with parameter.
+* Inputs:
+*	Clk_in: Clock signal 
+*  	reset: reset signal
+*	 
+* Outputs:
+* 	Clk_out: Clk out with 50% duty cycle
+* Version:  
+*	1.0
+* Author: 
+*	Ivan Martinez Flores & Jorge Araiza Martinez 
+* Fecha: 
+*	18/09/2018
+*********************************************************************/
 
-module Counter_With_Flag_And_Parameter
-#(
-	// Parameter Declarations
-	parameter frecuency = 100; // Frecuencia a generar expresada en Hertz 
-	paraneter reference_clocck = 50_000_000; // Frecuencia de referencia expresado en Hertz
-	
-	parameter MAXIMUM_VALUE = 4'h8,
-	parameter N_BITS = Ceil_Log2(MAXIMUM_VALUE)
-)
-
+module Divisor
+#(// reference_clocck frequency 50MHz, frequency 1 MHz
+	parameter frecuency = 1000000,
+	parameter reference_clocck = 50000000,
+	parameter max = frecuency / (2 * reference_clocck)
+)  
 (
-	// Input Ports
-	input clk,
+
+// input ports
+	input Clk_in,
 	input reset,
-	input enable,
 	
-	// Output Ports
-	output flag,
-	output[N_BITS - 1:0] counter
+// output ports
+	output reg Clk_out = 1'b0
 );
 
-reg max_value_bit_r;
+reg [4:0]counter = 0; // 5-bit counter size
 
-reg [N_BITS-1 : 0] counter_r;
-
-/*********************************************************************************************/
-
-	always@(posedge clk or negedge reset) begin
-		if (reset == 1'b0)
-			counter_r <= {N_BITS{1'b0}};
-		else begin
-				if(enable == 1'b1) begin
-					if(counter_r == MAXIMUM_VALUE - 1)
-						counter_r <= 1'b0;
-					else
-						counter_r <= counter_r + 1'b1;
-						
-				end
+always@(posedge Clk_in or negedge reset) begin
+	if (reset == 1'b0)
+		counter <= 0;	
+	if (counter == max-1)
+		begin
+		counter <= 0;
+		Clk_out <= ~Clk_out;
 		end
-	end
-
-
-always@(counter_r)
-	if(counter_r == MAXIMUM_VALUE - 1)
-		max_value_bit_r = 1;
 	else
-		max_value_bit_r = 0;
+		begin
+		counter <= counter + 1'd1;
+		end
 
-		
-/*********************************************************************************************/
-assign flag = max_value_bit_r;
-assign counter = counter_r;
-
-
-/*********************************************************************************************/
-/*********************************************************************************************/
-   
- /*Log Function*/
-     function integer Ceil_Log2;
-       input integer data;
-       integer i,result;
-       begin
-          for(i = 0; 2**i < data; i = i + 1)
-             result = i + 1;
-          Ceil_Log2 = result;
-       end
-    endfunction
-
-/*********************************************************************************************/
+	end
 endmodule
