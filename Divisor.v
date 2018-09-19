@@ -1,14 +1,12 @@
-// Clock divider circuit
-// From 50 MHz to 1 MHz with %50 duty cycle
  /******************************************************************* 
 * Name:
 *	Decodificador.v
 * Description:
-* 	This module is a register with parameter.
+* Clock divider circuit
+* From 50 MHz to 1 MHz with %50 duty cycle
 * Inputs:
 *	Clk_in: Clock signal 
-*  	reset: reset signal
-*	 
+* 	reset: reset signal	 
 * Outputs:
 * 	Clk_out: Clk out with 50% duty cycle
 * Version:  
