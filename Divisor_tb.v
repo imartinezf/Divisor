@@ -5,21 +5,19 @@ module Divisor_tb;
 
  // Inputs
  reg clock_in;
- reg reset_tb;
  // Outputs
- wire clock_out;
+ wire flag_out;
 
  
 Divisor
 #(
-	.frecuency(50000000), 
-	.reference_clocck(1000000) 
+	.Frequency(1_000_000), 
+	.Reference_Colcck(50_000_000) 
 )  
 DUT 
 ( 
-	.Clk_in(clock_in), 
-	.reset(reset_tb),
-   	.Clk_out(clock_out) 
+	.clk(clock_in), 
+   	.flag(flag_out) 
 
 );
 /*********************************************************************************************/
@@ -30,10 +28,10 @@ DUT
         forever #10 clock_in = ~clock_in;  //Input clock. 
  end
 /*********************************************************************************************/
-initial begin
+//initial begin
  // Set reset
-  #20 reset_tb = 1;
-end
+//  #20 reset_tb = 1;
+//end
 /*********************************************************************************************/
       
 endmodule
